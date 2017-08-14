@@ -129,12 +129,9 @@
 			children = (
 				FB3352C41F41E3C200E0C02B /* Model */,
 				FB3352C51F41E3C900E0C02B /* Views */,
-				FB3352C31F41E3B500E0C02B /* Controllers */,
-				FB3352A31F41E36B00E0C02B /* AppDelegate.swift */,
+				FB3352DC1F41FF9A00E0C02B /* Support Files */,
 				FB3352D41F41F7E400E0C02B /* Main.storyboard */,
-				FB3352AA1F41E36B00E0C02B /* Assets.xcassets */,
 				FB3352AC1F41E36B00E0C02B /* LaunchScreen.storyboard */,
-				FB3352AF1F41E36B00E0C02B /* Info.plist */,
 			);
 			path = StoreList;
 			sourceTree = "<group>";
@@ -146,13 +143,6 @@
 				FB3352BA1F41E36B00E0C02B /* Info.plist */,
 			);
 			path = StoreListTests;
-			sourceTree = "<group>";
-		};
-		FB3352C31F41E3B500E0C02B /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Controllers;
 			sourceTree = "<group>";
 		};
 		FB3352C41F41E3C200E0C02B /* Model */ = {
@@ -171,6 +161,16 @@
 				FB3352C81F41E5C800E0C02B /* DetailsVC.swift */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		FB3352DC1F41FF9A00E0C02B /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				FB3352A31F41E36B00E0C02B /* AppDelegate.swift */,
+				FB3352AA1F41E36B00E0C02B /* Assets.xcassets */,
+				FB3352AF1F41E36B00E0C02B /* Info.plist */,
+			);
+			name = "Support Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
