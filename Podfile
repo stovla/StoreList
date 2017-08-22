@@ -6,8 +6,5 @@ target 'StoreList' do
   use_frameworks!
 
   # Pods for StoreList
-  pod 'AFNetworking', '~> 3.0'
-  pod 'GoogleMaps'
-  pod 'GooglePlaces’
 
 end

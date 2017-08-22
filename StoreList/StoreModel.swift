@@ -7,51 +7,29 @@
 //
 
 import Foundation
+import UIKit
 
-public class Store {
+public struct Store {
     
      //store model 
-    var address: String
-    var city: String
-    var name: String
-    var latitude: String
-    var longitude: String
-    var logoURL: String
-    var zipCode: String
-    var phone: String
-    var storeID: String
-    var state: String
+    let address: String?
+    let city: String?
+    let name: String?
+    let latitude: String?
+    let longitude: String?
+    let logoURL: String?
+    let zipCode: String?
+    let phone: String?
+    let storeID: String?
+    let state: String?
     
-    
-    // if it is used as URL directly
-    // var logoURL: URL?
-    
-    
-    init(dictionary: [String: Any]) {
-        
-        name = dictionary["name"] as? String ?? ""
-        address = dictionary["address"] as? String ?? ""
-        city = dictionary["city"] as? String ?? ""
-        
-        latitude = dictionary["latitude"] as? String ?? ""
-        longitude = dictionary["longitude"] as? String ?? ""
-        
-        zipCode = dictionary["zipcode"] as? String ?? ""
-        phone = dictionary["phone"] as? String ?? ""
-        storeID = dictionary["storeID"] as? String ?? ""
-        state = dictionary["state"] as? String ?? ""
-        logoURL = dictionary["storeLogoURL"] as? String ?? ""
-        
-        // used directly as a URL
-//        if let urlString = dictionary["storeLogoURL"] as? String {
-//            logoURL = URL(string:urlString)
-//        }
-    }
+    let image: UIImage?
+
 }
 
 // printable form, NEEDS TO BE UPDATED
 extension Store: CustomStringConvertible {
     public var description: String {
-        return "\(name)"
+        return "\(String(describing: name))"
     }
 }

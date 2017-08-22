@@ -7,6 +7,7 @@
 //
 
 import UIKit
+//import AFNetworking
 
 class MainTVC: UITableViewController {
     
@@ -14,14 +15,11 @@ class MainTVC: UITableViewController {
     
     let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
     
-   // @IBOutlet weak var spinner: UIActivityIndicatorView!
-    
     // stores object
     private var stores: [Store] = [] {
         didSet {
-            tableView.reloadData()
-           // spinner.stopAnimating()
             activityIndicator.stopAnimating()
+            tableView.reloadData()
         }
     }
     
@@ -36,44 +34,67 @@ class MainTVC: UITableViewController {
             if error == nil, let usableData = data {
                 print(usableData)
                 do {
-                    
                     // parse STORE objects as dictionaries
                     let json = try JSONSerialization.jsonObject(with: usableData, options: .allowFragments) as? [String: AnyObject]
-                    let parsedJson = json?["stores"] as! [[String: Any]]
-                    var tmp: [Store] = []
-                    for store in parsedJson {
-                        tmp.append(Store(dictionary: store))
+                    if let parsedJson = json?["stores"] as? [[String: Any]] {
+                        print(parsedJson)
+                        var tmp: [Store] = []
+                        for store in parsedJson {
+                            //tmp.append(store)
+                            tmp.append(Store(
+                                address: store["address"] as? String,
+                                city: store["city"] as? String,
+                                name: store["name"] as? String,
+                                latitude: store["latitude"] as? String,
+                                longitude: store["longitude"] as? String,
+                                logoURL: store["storeLogoURL"] as? String,
+                                zipCode: store["zipcode"] as? String,
+                                phone: store["phone"] as? String,
+                                storeID: store["storeID"] as? String,
+                                state: store["state"] as? String,
+                                image: self?.fetchImage(url: store["storeLogoURL"] as! String)))
+                            
+                            //tmp.append(Store(dictionary: store, city: <#String#>, name: <#String#>))
+                        }
+                        DispatchQueue.main.sync {
+                            self?.stores = tmp
+                            
+                            self?.refresher.endRefreshing()
+                        }
+
+                        // confirmed value if the array has been filled
+                        print(" confirming \(self?.stores.count ?? 0)")
                     }
-                    DispatchQueue.main.sync {
-                        self?.stores = tmp
-                    }
-                    
-                    // confirmed value
-                    print(" confirming \(self?.stores.count ?? 0)")
-                    
                 } catch let err as NSError  {
-                    print("\(err)")
+                    print(" this as an arror : \(err)")
                 }
             } else {
                 print(error!)
             }
         }
         task.resume()
-        
-        tableView.reloadData()
-        self.refresher.endRefreshing()
     }
     
-    override var tableView: UITableView! {
-        didSet {
-            tableView.estimatedRowHeight = tableView.rowHeight
-            tableView.rowHeight = UITableViewAutomaticDimension
+    
+    private func fetchImage(url: String) -> UIImage {
+        
+        let urlString = URL(string: url)
+        
+        var image = UIImage()
+        
+        if let imageData: NSData = NSData(contentsOf: urlString!) {
+            image = UIImage(data: imageData as Data)!
         }
+        
+        return image
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.estimatedRowHeight = tableView.rowHeight
+        tableView.rowHeight = UITableViewAutomaticDimension
         
         activityIndicator.activityIndicatorViewStyle = .gray
         activityIndicator.center = self.view.center
@@ -87,19 +108,16 @@ class MainTVC: UITableViewController {
         tableView.addSubview(refresher)
         
         updateTable()
+        self.refresher.endRefreshing()
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        
         return self.stores.count
     }
     
@@ -112,14 +130,15 @@ class MainTVC: UITableViewController {
         if let storeCell = cell as? StoreTVCell {
             storeCell.store = newStore
         }
+        
         return cell
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        
-        switch (segue.identifier ?? "") {
+        guard let identifier = segue.identifier else { return }
+        switch identifier {
         case "Details":
             guard let destination = segue.destination as? DetailsVC else {
                 return
@@ -132,55 +151,10 @@ class MainTVC: UITableViewController {
             }
             let selected = self.stores[indexPath.row]
             destination.store = selected
-            let image: UIImage = selectedCell.newImage!
-            destination.image = image
             
         default:
             fatalError("Unexpected Segue Identifier!")
         }
     }
-    
-    
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    
 
 }
