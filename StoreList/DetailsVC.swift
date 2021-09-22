@@ -38,12 +38,13 @@ class DetailsVC: UIViewController {
     
     // updating the view 
     func updateUi() {
+        
         self.nameLabel.text = store?.name
         self.addressLabel.text = store?.address
         
         self.logoImage.image = store?.image
 
-        self.infoPhoneLabel.text = "(\((store?.phone)!))"
+        self.infoPhoneLabel.text = "(\(String(describing: store?.phone)))"
 
         self.infoEmailLabel.text = "(info@email.com)"
         self.infoWebsiteLabel.text = "(www.example.com)"
@@ -52,8 +53,8 @@ class DetailsVC: UIViewController {
     // map with MKMap
     private func updateMap() {
         
-        let latitude: CLLocationDegrees = Double((store?.latitude)!)!
-        let longitude: CLLocationDegrees = Double((store?.longitude)!)!
+        let latitude: CLLocationDegrees = store?.latitude ?? 0
+        let longitude: CLLocationDegrees = store?.longitude ?? 0
         
         let latDelta: CLLocationDegrees = 0.01
         let lonDelta: CLLocationDegrees = 0.01
