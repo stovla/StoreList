@@ -12,16 +12,16 @@ import UIKit
 public struct Store {
     
      //store model 
-    let address: String?
-    let city: String?
-    let name: String?
-    let latitude: String?
-    let longitude: String?
-    let logoURL: String?
-    let zipCode: String?
-    let phone: String?
-    let storeID: String?
-    let state: String?
+    let address: String
+    let city: String
+    let name: String
+    let latitude: Double
+    let longitude: Double
+    let logoURL: String
+    let zipCode: String
+    let phone: String
+    let storeID: String
+    let state: String
     
     let image: UIImage?
 

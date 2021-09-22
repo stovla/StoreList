@@ -42,16 +42,16 @@ class MainTVC: UITableViewController {
                         for store in parsedJson {
                             //tmp.append(store)
                             tmp.append(Store(
-                                address: store["address"] as? String,
-                                city: store["city"] as? String,
-                                name: store["name"] as? String,
-                                latitude: store["latitude"] as? String,
-                                longitude: store["longitude"] as? String,
-                                logoURL: store["storeLogoURL"] as? String,
-                                zipCode: store["zipcode"] as? String,
-                                phone: store["phone"] as? String,
-                                storeID: store["storeID"] as? String,
-                                state: store["state"] as? String,
+                                address: store["address"] as! String,
+                                city: store["city"] as! String,
+                                name: store["name"] as! String,
+                                latitude: Double(store["latitude"] as! String) ?? 0,
+                                longitude: Double(store["longitude"] as! String) ?? 0,
+                                logoURL: store["storeLogoURL"] as! String,
+                                zipCode: store["zipcode"] as! String,
+                                phone: store["phone"] as! String,
+                                storeID: store["storeID"] as! String,
+                                state: store["state"] as! String,
                                 image: self?.fetchImage(url: store["storeLogoURL"] as! String)))
                             
                             //tmp.append(Store(dictionary: store, city: <#String#>, name: <#String#>))
@@ -94,16 +94,16 @@ class MainTVC: UITableViewController {
         super.viewDidLoad()
         
         tableView.estimatedRowHeight = tableView.rowHeight
-        tableView.rowHeight = UITableViewAutomaticDimension
+//        tableView.rowHeight = .infinity
         
-        activityIndicator.activityIndicatorViewStyle = .gray
+        activityIndicator.style = .gray
         activityIndicator.center = self.view.center
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
         tableView.addSubview(activityIndicator)
         
         refresher.attributedTitle = NSAttributedString(string: "Pull to refresh!")
-        refresher.addTarget(self, action: #selector(MainTVC.updateTable), for: UIControlEvents.valueChanged)
+        refresher.addTarget(self, action: #selector(MainTVC.updateTable), for: UIControl.Event.valueChanged)
         
         tableView.addSubview(refresher)
         
