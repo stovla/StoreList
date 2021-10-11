@@ -42,7 +42,7 @@ class DetailsVC: UIViewController {
         self.nameLabel.text = store?.name
         self.addressLabel.text = store?.address
         
-        self.logoImage.image = store?.image
+        self.logoImage.image = store?.logoImage
 
         self.infoPhoneLabel.text = "(\(String(describing: store?.phone)))"
 

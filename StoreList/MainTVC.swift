@@ -18,14 +18,17 @@ class MainTVC: UITableViewController {
     // stores object
     private var stores: [Store] = [] {
         didSet {
-            activityIndicator.stopAnimating()
-            tableView.reloadData()
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.tableView.reloadData()
+            }
         }
     }
     
     @objc private func updateTable() {
         
-        let urlString = "http://sandbox.bottlerocketapps.com/BR_Android_CodingExam_2015_Server/stores.json"
+        
+       let urlString = "http://sandbox.bottlerocketapps.com/BR_Android_CodingExam_2015_Server/stores.json"
         
         guard let url = URL(string: urlString) else { return }
         
@@ -33,38 +36,13 @@ class MainTVC: UITableViewController {
         let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             if error == nil, let usableData = data {
                 print(usableData)
+                
+                
                 do {
-                    // parse STORE objects as dictionaries
-                    let json = try JSONSerialization.jsonObject(with: usableData, options: .allowFragments) as? [String: AnyObject]
-                    if let parsedJson = json?["stores"] as? [[String: Any]] {
-                        print(parsedJson)
-                        var tmp: [Store] = []
-                        for store in parsedJson {
-                            //tmp.append(store)
-                            tmp.append(Store(
-                                address: store["address"] as! String,
-                                city: store["city"] as! String,
-                                name: store["name"] as! String,
-                                latitude: Double(store["latitude"] as! String) ?? 0,
-                                longitude: Double(store["longitude"] as! String) ?? 0,
-                                logoURL: store["storeLogoURL"] as! String,
-                                zipCode: store["zipcode"] as! String,
-                                phone: store["phone"] as! String,
-                                storeID: store["storeID"] as! String,
-                                state: store["state"] as! String,
-                                image: self?.fetchImage(url: store["storeLogoURL"] as! String)))
-                            
-                            //tmp.append(Store(dictionary: store, city: <#String#>, name: <#String#>))
-                        }
-                        DispatchQueue.main.sync {
-                            self?.stores = tmp
-                            
-                            self?.refresher.endRefreshing()
-                        }
-
-                        // confirmed value if the array has been filled
-                        print(" confirming \(self?.stores.count ?? 0)")
-                    }
+                    let jsonData = try JSONDecoder().decode(StoreResponse.self, from: usableData)
+                    self?.stores = jsonData.stores
+                    
+                    print(" confirming \(self?.stores.count ?? 0)")
                 } catch let err as NSError  {
                     print(" this as an arror : \(err)")
                 }
@@ -93,8 +71,9 @@ class MainTVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.estimatedRowHeight = 60
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = tableView.rowHeight
-//        tableView.rowHeight = .infinity
         
         activityIndicator.style = .gray
         activityIndicator.center = self.view.center
@@ -129,6 +108,12 @@ class MainTVC: UITableViewController {
         
         if let storeCell = cell as? StoreTVCell {
             storeCell.store = newStore
+        }
+        
+        if indexPath.row.isMultiple(of: 2) {
+            cell.backgroundColor = .cyan
+        } else {
+            cell.backgroundColor = .white
         }
         
         return cell

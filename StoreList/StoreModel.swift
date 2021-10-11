@@ -9,7 +9,11 @@
 import Foundation
 import UIKit
 
-public struct Store {
+struct StoreResponse: Codable {
+    let stores: [Store]
+}
+
+struct Store: Codable {
     
      //store model 
     let address: String
@@ -23,8 +27,41 @@ public struct Store {
     let storeID: String
     let state: String
     
-    let image: UIImage?
-
+    var logoImage: UIImage {
+        if let url = URL(string: logoURL),
+           let data = try? Data(contentsOf: url) {
+            return UIImage(data: data) ?? UIImage()
+        } else {
+            return UIImage()
+        }
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case address
+        case city
+        case name
+        case latitude
+        case longitude
+        case logoURL = "storeLogoURL"
+        case zipCode = "zipcode"
+        case phone
+        case storeID
+        case state
+    }
+    
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        address = try values.decode(String.self, forKey: .address)
+        city = try values.decode(String.self, forKey: .city)
+        name = try values.decode(String.self, forKey: .name)
+        latitude = try Double(values.decode(String.self, forKey: .latitude)) ?? 0.0
+        longitude = try Double(values.decode(String.self, forKey: .longitude)) ?? 0.0
+        logoURL = try values.decode(String.self, forKey: .logoURL)
+        zipCode = try values.decode(String.self, forKey: .zipCode)
+        phone = try values.decode(String.self, forKey: .phone)
+        storeID = try values.decode(String.self, forKey: .storeID)
+        state = try values.decode(String.self, forKey: .state)
+    }
 }
 
 // printable form, NEEDS TO BE UPDATED
