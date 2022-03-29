@@ -21,6 +21,7 @@ class MainTVC: UITableViewController {
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
                 self.tableView.reloadData()
+                self.refresher.endRefreshing()
             }
         }
     }
@@ -131,11 +132,7 @@ class MainTVC: UITableViewController {
             guard let selectedCell = sender as? StoreTVCell else {
                 return
             }
-            guard let indexPath = tableView.indexPath(for: selectedCell) else {
-                return
-            }
-            let selected = self.stores[indexPath.row]
-            destination.store = selected
+            destination.store = selectedCell.store
             
         default:
             fatalError("Unexpected Segue Identifier!")
